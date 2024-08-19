@@ -1,15 +1,13 @@
 import React from 'react';
-import { Modal, Box, Button, TextField, Typography } from '@mui/material';
+import { Modal, Box, Button, TextField } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { User } from '../Users/Users';
 import { useDispatch } from 'react-redux';
-import { updateUser } from '../../features/userDataSlice';
+import { addUser } from '../../features/userDataSlice';
 
-interface UserEditModalProps {
+interface AddNewUserModalProps {
     open: boolean;
     onClose: () => void;
-    user: User | null;
-    onSubmit: (data: User) => void;
 }
 
 const modalStyle = {
@@ -19,18 +17,17 @@ const modalStyle = {
     transform: 'translate(-50%, -50%)',
     width: 600,
     bgcolor: 'background.paper',
-    // border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     maxHeight: '80vh',
     overflowY: 'auto',
 };
 
-const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) => {
+const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
     const dispatch = useDispatch();
-    const { control, handleSubmit, setValue } = useForm<User>({
-        defaultValues: user || {
-            id: 0,
+    const { control, handleSubmit } = useForm<User>({
+        defaultValues: {
+            id: 0, // Default ID; should be handled properly (e.g., auto-increment or server-side generated)
             firstName: '',
             lastName: '',
             age: 0,
@@ -44,16 +41,10 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
     });
 
     const onSubmit = (data: User) => {
-        console.log('Submit----------->', data);
-        dispatch(updateUser(data)); // Directly dispatch the User object
+        console.log('New User Data:', data);
+        dispatch(addUser(data));
         onClose(); // Close the modal
     };
-
-    React.useEffect(() => {
-        if (user) {
-            Object.keys(user).forEach(key => setValue(key as keyof User, user[key]));
-        }
-    }, [user, setValue]);
 
     return (
         <Modal
@@ -63,9 +54,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
             aria-describedby="modal-description"
         >
             <Box sx={modalStyle}>
-                <Typography id="edit-modal-title" variant="h6" component="h2">
-                    Edit User
-                </Typography>
+                <h2>Add New User</h2>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Controller
                         name="firstName"
@@ -121,5 +110,4 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
     );
 }
 
-
-export default UserEditModal;
+export default AddNewUserModal;

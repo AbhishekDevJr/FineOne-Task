@@ -2,13 +2,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { API_HEADERS, USER_DATA_URL } from '../../constants/apiEndpoints';
 import { useDispatch, useSelector } from 'react-redux';
 import './users.scss';
-import { setUserData } from '../../features/userDataSlice';
+import { addUser, deleteUser, setUserData } from '../../features/userDataSlice';
 // import { Button } from '@mui/material';
 import { useTable, Column } from 'react-table';
 import { RootState } from '../../store/store';
 import isEmpty from 'lodash/isEmpty';
 import { Button } from '@mui/material';
 import UserEditModal from '../UserEditModal/UserEditModal';
+import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
+import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
 
 
 export interface User {
@@ -29,10 +31,12 @@ export interface User {
 
 function Users() {
     const dispatch = useDispatch();
-    const userData = useSelector((state: RootState) => state.userData);
+    const userData = useSelector((state: RootState) => state.userData.userData);
 
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
     const columns: Column<User>[] = useMemo(
         () => [
@@ -92,7 +96,7 @@ function Users() {
                             }}>
                             Edit
                         </Button>
-                        <Button variant="contained" color="secondary" size="small">
+                        <Button variant="contained" color="secondary" size="small" onClick={() => handleDeleteClick(row.original)}>
                             Delete
                         </Button>
                     </div>
@@ -134,6 +138,29 @@ function Users() {
         }
     }
 
+    const handleDeleteClick = (user: User) => {
+        setSelectedUser(user);
+        setIsConfirmationOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (selectedUser) {
+            dispatch(deleteUser(selectedUser.id));
+        }
+        setIsConfirmationOpen(false);
+        setSelectedUser(null);
+    };
+
+    const handleCloseConfirmation = () => {
+        setIsConfirmationOpen(false);
+        setSelectedUser(null);
+    };
+
+    // const handleAddNewUser = (user: User) => {
+    //     dispatch(addUser(user));
+    //     setIsAddUserModalOpen(false);
+    // };
+
     useEffect(() => {
         fetchUserData('GET', undefined);
     }, []);
@@ -142,7 +169,7 @@ function Users() {
     return (
         <>
             <div style={{ marginRight: '15px', marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary"  onClick={() => setIsAddUserModalOpen(true)}>
                     Add New User
                 </Button>
             </div>
@@ -181,11 +208,23 @@ function Users() {
                     })}
                 </tbody>
             </table>
+            {selectedUser && (
+                <ConfirmationModal
+                    open={isConfirmationOpen}
+                    onClose={handleCloseConfirmation}
+                    onConfirm={handleConfirmDelete}
+                    userName={selectedUser.firstName + ' ' + selectedUser.lastName}
+                />
+            )}
             <UserEditModal
                 open={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 user={selectedUser}
                 onSubmit={handleEditSubmit}
+            />
+            <AddNewUserModal
+                open={isAddUserModalOpen}
+                onClose={() => setIsAddUserModalOpen(false)}
             />
         </>
     )
