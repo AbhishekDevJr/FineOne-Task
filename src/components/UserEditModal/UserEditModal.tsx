@@ -46,8 +46,8 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
 
     const onSubmit = (data: User) => {
         console.log('Submit----------->', data);
-        dispatch(updateUser(data)); // Directly dispatch the User object
-        onClose(); // Close the modal
+        dispatch(updateUser(data));
+        onClose();
     };
 
     React.useEffect(() => {

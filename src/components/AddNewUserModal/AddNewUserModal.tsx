@@ -27,7 +27,7 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
     const dispatch = useDispatch();
     const { control, handleSubmit } = useForm<User>({
         defaultValues: {
-            id: 0, // Default ID; should be handled properly (e.g., auto-increment or server-side generated)
+            id: 0,
             firstName: '',
             lastName: '',
             age: 0,
@@ -43,7 +43,7 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
     const onSubmit = (data: User) => {
         console.log('New User Data:', data);
         dispatch(addUser(data));
-        onClose(); // Close the modal
+        onClose();
     };
 
     return (

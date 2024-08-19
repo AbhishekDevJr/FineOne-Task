@@ -27,7 +27,6 @@ export interface User {
         items: Record<string, unknown>
     },
     role: string
-    // Add other fields if needed
 }
 
 function Users() {
@@ -108,7 +107,6 @@ function Users() {
     );
 
     const handleEditSubmit = (data: User) => {
-        // Handle the form submission here
         console.log('Edited User Data:', data);
         setIsModalOpen(false);
     };

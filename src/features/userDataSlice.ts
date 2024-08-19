@@ -15,12 +15,12 @@ const userDataSlice = createSlice({
     initialState,
     reducers: {
         setUserData: (state, action: PayloadAction<User[]>) => {
-            state.userData = action.payload; // Update the state directly
+            state.userData = action.payload;
         },
         updateUser: (state, action: PayloadAction<User>) => {
             const userIndex = state.userData.findIndex(user => user.id === action.payload.id);
             if (userIndex !== -1) {
-                state.userData[userIndex] = action.payload; // Update the specific user
+                state.userData[userIndex] = action.payload;
             }
         },
         deleteUser: (state, action: PayloadAction<number>) => {

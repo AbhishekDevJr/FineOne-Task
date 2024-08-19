@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import { decryptData } from '../../helpers/encryptData';
+import { decryptData, encryptData } from '../../helpers/encryptData';
 
 interface SignInForm {
     email: string;
@@ -20,6 +20,7 @@ const Signin: React.FC = () => {
         console.log('SignIn Submit----------->', data, registeredUsers);
         if (Array.isArray(registeredUsers) && registeredUsers.some((item) => item.email === data.email)) {
             if (Array.isArray(registeredUsers) && registeredUsers.some((item) => item.password === data.password)) {
+                localStorage.setItem('loginToken', encryptData('chintapakdumdum'));
                 navigate('/users');
             }
             else {

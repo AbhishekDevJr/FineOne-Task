@@ -16,7 +16,7 @@ interface User {
     macAddress: string;
     company: string;
     role: string;
-    password: string; // Add password field for login
+    password: string;
 }
 
 const Register: React.FC = () => {
