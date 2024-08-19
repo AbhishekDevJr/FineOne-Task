@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import { encryptData } from '../../helpers/encryptData';
 
 interface User {
     id: number;
@@ -13,7 +14,7 @@ interface User {
     phone: string;
     ip: string;
     macAddress: string;
-    company: { items: Record<string, unknown> };
+    company: string;
     role: string;
     password: string; // Add password field for login
 }
@@ -23,9 +24,16 @@ const Register: React.FC = () => {
     const navigate = useNavigate();
 
     const onSubmit = (data: User) => {
-        // Get registered users from localStorage
-        const encryptedUsers = localStorage.getItem('users');
+        console.log('Register Data------->', data);
+        const registeredUsers = localStorage.getItem('registeredUsers');
 
+        if (Array.isArray(registeredUsers)) {
+            const updatedRegisteredUsers = [...registeredUsers, data];
+            localStorage.setItem('registeredUsers', encryptData(updatedRegisteredUsers));
+        }
+        else {
+            localStorage.setItem('registeredUsers', encryptData([data]));
+        }
         navigate('/signin');
     };
 
@@ -61,17 +69,7 @@ const Register: React.FC = () => {
                     render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
                 />
                 <Controller
-                    name="ip"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="IP Address" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="macAddress"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="MAC Address" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="company.items"
+                    name="company"
                     control={control}
                     render={({ field }) => <TextField {...field} label="Company" fullWidth margin="normal" />}
                 />
