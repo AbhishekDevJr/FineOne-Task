@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { User } from '../Users/Users';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../features/userDataSlice';
+import { decryptData } from '../../helpers/encryptData';
 
 interface UserEditModalProps {
     open: boolean;

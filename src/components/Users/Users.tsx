@@ -11,6 +11,7 @@ import { Button } from '@mui/material';
 import UserEditModal from '../UserEditModal/UserEditModal';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
+import { encryptData } from '../../helpers/encryptData';
 
 
 export interface User {
@@ -156,20 +157,19 @@ function Users() {
         setSelectedUser(null);
     };
 
-    // const handleAddNewUser = (user: User) => {
-    //     dispatch(addUser(user));
-    //     setIsAddUserModalOpen(false);
-    // };
-
     useEffect(() => {
         fetchUserData('GET', undefined);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('userData', encryptData(userData))
+    }, [userData]);
 
 
     return (
         <>
             <div style={{ marginRight: '15px', marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" color="primary"  onClick={() => setIsAddUserModalOpen(true)}>
+                <Button variant="contained" color="primary" onClick={() => setIsAddUserModalOpen(true)}>
                     Add New User
                 </Button>
             </div>
