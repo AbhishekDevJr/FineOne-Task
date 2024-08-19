@@ -32,7 +32,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, on
                     Delete User
                 </Typography>
                 <Typography id="confirmation-modal-description" sx={{ mt: 2 }}>
-                    Are you sure you want to delete user {userName}?
+                    Are you sure you want to delete user <span style={{ fontWeight: '600' }}>{userName}</span>?
                 </Typography>
                 <Box sx={{ mt: 2 }}>
                     <Button variant="contained" color="secondary" onClick={onConfirm} style={{ marginRight: '8px' }}>
