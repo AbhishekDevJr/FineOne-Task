@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Box, Button, TextField } from '@mui/material';
+import { Modal, Box, Button, TextField, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { User } from '../Users/Users';
 import { useDispatch } from 'react-redux';
@@ -54,7 +54,9 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
             aria-describedby="modal-description"
         >
             <Box sx={modalStyle}>
-                <h2>Add New User</h2>
+                <Typography id="confirmation-modal-title" variant="h6" component="h2">
+                    Add New User
+                </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Controller
                         name="firstName"

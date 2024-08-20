@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { decryptData, encryptData } from '../../helpers/encryptData';
+import { useDispatch } from 'react-redux';
+import { setLoginToken } from '../../features/authSlice';
 
 interface SignInForm {
     email: string;
@@ -15,12 +17,15 @@ const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
 const Signin: React.FC = () => {
     const { control, handleSubmit } = useForm<SignInForm>();
     const navigate = useNavigate();
+    const [registeredUserState, setRegisteredUserState] = useState(decryptData(localStorage.getItem('registeredUsers')));
+    const dispatch = useDispatch();
 
     const onSubmit = (data: SignInForm) => {
-        console.log('SignIn Submit----------->', data, registeredUsers);
-        if (Array.isArray(registeredUsers) && registeredUsers.some((item) => item.email === data.email)) {
-            if (Array.isArray(registeredUsers) && registeredUsers.some((item) => item.password === data.password)) {
+        console.log('SignIn Submit----------->', data, registeredUsers, Array.isArray(registeredUsers) && registeredUsers.some((item) => item.email === data.email));
+        if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.email === data.email)) {
+            if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.password === data.password)) {
                 localStorage.setItem('loginToken', encryptData('chintapakdumdum'));
+                dispatch(setLoginToken(encryptData('chintapakdumdum')));
                 navigate('/users');
             }
             else {
@@ -31,6 +36,10 @@ const Signin: React.FC = () => {
             alert('Wrong Username!');
         }
     };
+
+    useEffect(() => {
+        setRegisteredUserState(decryptData(localStorage.getItem('registeredUsers')));
+    }, []);
 
     return (
         <Box sx={{ width: 400, margin: 'auto', mt: 5 }}>

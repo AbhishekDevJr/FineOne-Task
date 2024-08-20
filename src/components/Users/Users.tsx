@@ -11,7 +11,7 @@ import { Button } from '@mui/material';
 import UserEditModal from '../UserEditModal/UserEditModal';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
-import { encryptData } from '../../helpers/encryptData';
+import { decryptData, encryptData } from '../../helpers/encryptData';
 
 
 export interface User {
@@ -30,6 +30,7 @@ export interface User {
 }
 
 function Users() {
+    const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
     const dispatch = useDispatch();
     const userData = useSelector((state: RootState) => state.userData.userData);
 
@@ -79,7 +80,7 @@ function Users() {
             {
                 Header: 'Company',
                 accessor: 'company' as keyof User,
-                Cell: (cell: unknown) => cell.row.original.company.name || '-'
+                Cell: (cell: unknown) => cell.row.original?.company?.name || '-'
             },
             {
                 Header: 'Actions',
@@ -130,7 +131,8 @@ function Users() {
 
         if (userData?.ok && userData?.status === 200) {
             const finalUserData = await userData.json();
-            dispatch(setUserData(finalUserData.users));
+            console.log('registeredUsers local------->', registeredUsers, finalUserData.users);
+            dispatch(setUserData(finalUserData.users.concat(registeredUsers?.map((item, index) => { return { ...item, id: finalUserData.users.length + (index + 1) } }))));
         }
         else {
             //Handle Error Here

@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import { encryptData } from '../../helpers/encryptData';
+import { decryptData, encryptData } from '../../helpers/encryptData';
 
 interface User {
     id: number;
@@ -24,8 +24,8 @@ const Register: React.FC = () => {
     const navigate = useNavigate();
 
     const onSubmit = (data: User) => {
-        console.log('Register Data------->', data);
-        const registeredUsers = localStorage.getItem('registeredUsers');
+        const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
+        console.log('Register Data------->', data, registeredUsers);
 
         if (Array.isArray(registeredUsers)) {
             const updatedRegisteredUsers = [...registeredUsers, data];
