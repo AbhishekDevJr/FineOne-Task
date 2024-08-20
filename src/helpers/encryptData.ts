@@ -1,6 +1,7 @@
 import CryptoJS from 'crypto-js';
 const secretKey = 'mySecretKey';
 
+//Encrypts Passed Data CryptoJS Encryption
 export const encryptData = (data: unknown | undefined) => {
     if (data && data !== '') {
         const stringifiedArray = JSON.stringify(data);
@@ -9,6 +10,7 @@ export const encryptData = (data: unknown | undefined) => {
     }
 };
 
+//Decrypts Passed Data CryptoJS Encryption
 export const decryptData = (encryptedData: unknown) => {
     if (encryptedData && encryptedData !== '') {
         const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);

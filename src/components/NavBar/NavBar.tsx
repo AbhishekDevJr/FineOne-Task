@@ -4,31 +4,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import { decryptData } from '../../helpers/encryptData';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearLoginToken } from '../../features/authSlice';
+import { RootState } from '../../store/store';
 
 const NavBar = () => {
+    //NavBar Comp Control Variables
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loginToken, setLoginToken] = useState<string | undefined>(undefined);
-    const loginTokenTemp = decryptData(useSelector(state => state.auth.loginToken));
+    const loginTokenTemp = decryptData(useSelector((state: RootState) => state.auth.loginToken));
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log('Auth ---------------->', loginTokenTemp, loginToken);
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
+    //Handled Logout Button Logic
     const handleLogout = () => {
         localStorage.removeItem('loginToken');
         setLoginToken(undefined);
         dispatch(clearLoginToken());
+        setAnchorEl(null);
         navigate('/signin');
-        handleClose();
     };
 
+    //Sets Login Token State to Locally Stored Login Token on Component Mount
     useEffect(() => {
         setLoginToken(decryptData(localStorage.getItem('loginToken')));
     }, []);
@@ -46,7 +41,7 @@ const NavBar = () => {
                 <Button color="inherit" component={Link} to="/cities">City Data</Button>
                 <Button color="inherit" component={Link} to="/countries">Country Data</Button>
                 {loginToken || loginTokenTemp === 'chintapakdumdum' ?
-                    <IconButton onClick={handleClick} color="inherit">
+                    <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)} color="inherit">
                         <Avatar alt="Profile Picture">U</Avatar>
                     </IconButton>
                     :
@@ -56,7 +51,7 @@ const NavBar = () => {
                     id={id}
                     open={open}
                     anchorEl={anchorEl}
-                    onClose={handleClose}
+                    onClose={() => setAnchorEl(null)}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right',

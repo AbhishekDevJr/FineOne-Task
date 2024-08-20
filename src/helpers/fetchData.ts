@@ -9,7 +9,6 @@ export const fetchData = async (apiUrl: string, apiMethod: string, reqBody: unkn
 
     if (apiResponse?.ok && apiResponse?.status === 200) {
         const finalRes = await apiResponse.json();
-        console.log('finalRes---->', finalRes)
         return finalRes;
     }
     else {

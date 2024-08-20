@@ -20,6 +20,7 @@ const modalStyle = {
 };
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, onConfirm, userName }) => {
+    //ConfirmationModal Comp Control Variables
     return (
         <Modal
             open={open}

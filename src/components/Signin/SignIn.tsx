@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
 import { decryptData, encryptData } from '../../helpers/encryptData';
 import { useDispatch } from 'react-redux';
 import { setLoginToken } from '../../features/authSlice';
@@ -12,19 +11,19 @@ interface SignInForm {
     password: string;
 }
 
-const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
-
 const Signin: React.FC = () => {
+    //SignIn Comp Control Variables
     const { control, handleSubmit } = useForm<SignInForm>();
     const navigate = useNavigate();
-    const [registeredUserState, setRegisteredUserState] = useState(decryptData(localStorage.getItem('registeredUsers')));
     const dispatch = useDispatch();
+    const [registeredUserState, setRegisteredUserState] = useState(decryptData(localStorage.getItem('registeredUsers')));
 
+    //Form Submission Handler
     const onSubmit = (data: SignInForm) => {
-        console.log('SignIn Submit----------->', data, registeredUsers, Array.isArray(registeredUsers) && registeredUsers.some((item) => item.email === data.email));
+        //Checks SignIN Credentials with Locally Stores Registered User
         if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.email === data.email)) {
             if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.password === data.password)) {
-                localStorage.setItem('loginToken', encryptData('chintapakdumdum'));
+                localStorage.setItem('loginToken', encryptData('chintapakdumdum') || '');
                 dispatch(setLoginToken(encryptData('chintapakdumdum')));
                 navigate('/users');
             }
@@ -37,6 +36,7 @@ const Signin: React.FC = () => {
         }
     };
 
+    //Sets State to Registered Users Stored in LocalStorage
     useEffect(() => {
         setRegisteredUserState(decryptData(localStorage.getItem('registeredUsers')));
     }, []);

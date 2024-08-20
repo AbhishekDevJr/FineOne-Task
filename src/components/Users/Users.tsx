@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { API_HEADERS, USER_DATA_URL } from '../../constants/apiEndpoints';
 import { useDispatch, useSelector } from 'react-redux';
-import './users.scss';
-import { addUser, deleteUser, setUserData } from '../../features/userDataSlice';
-// import { Button } from '@mui/material';
-import { useTable, Column } from 'react-table';
+import { deleteUser, setUserData } from '../../features/userDataSlice';
+import { useTable, Column, CellProps } from 'react-table';
 import { RootState } from '../../store/store';
-import isEmpty from 'lodash/isEmpty';
 import { Button } from '@mui/material';
 import UserEditModal from '../UserEditModal/UserEditModal';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
 import { decryptData, encryptData } from '../../helpers/encryptData';
 
-
+//User Object Structure Interface
 export interface User {
     id: number;
     firstName: string;
@@ -24,21 +21,23 @@ export interface User {
     ip: string,
     macAddress: string,
     company: {
-        items: Record<string, unknown>
-    },
+        items: Record<string, unknown>;
+        name?: string;
+    };
     role: string
 }
 
 function Users() {
+    //Users Comp Control Variables
     const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
     const dispatch = useDispatch();
     const userData = useSelector((state: RootState) => state.userData.userData);
-
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
     const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
+    //Defines Columns for Table
     const columns: Column<User>[] = useMemo(
         () => [
             {
@@ -80,7 +79,7 @@ function Users() {
             {
                 Header: 'Company',
                 accessor: 'company' as keyof User,
-                Cell: (cell: unknown) => cell.row.original?.company?.name || '-'
+                Cell: (cell: CellProps<User>) => cell.row.original?.company?.name || '-'
             },
             {
                 Header: 'Actions',
@@ -107,21 +106,7 @@ function Users() {
         []
     );
 
-    const handleEditSubmit = (data: User) => {
-        console.log('Edited User Data:', data);
-        setIsModalOpen(false);
-    };
-
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-    } = useTable({ columns, data: userData.length ? userData : [] });
-
-    console.log('userData', userData);
-
+    //Fetches User Data from Dummy Json & Sets them as User Data in Global Store
     const fetchUserData = async (apiMethod: string, reqBody: unknown) => {
         const userData = await fetch(USER_DATA_URL, {
             method: apiMethod,
@@ -131,14 +116,23 @@ function Users() {
 
         if (userData?.ok && userData?.status === 200) {
             const finalUserData = await userData.json();
-            console.log('registeredUsers local------->', registeredUsers, finalUserData.users);
-            dispatch(setUserData(finalUserData.users.concat(registeredUsers?.map((item, index) => { return { ...item, id: finalUserData.users.length + (index + 1) } }))));
+            dispatch(setUserData(finalUserData.users.concat(registeredUsers?.map((item: User, index: number) => { return { ...item, id: finalUserData.users.length + (index + 1) } }))));
         }
         else {
             //Handle Error Here
         }
     }
 
+    //Gets Table Props by Passing Columns & User Data used to Render Table
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+    } = useTable({ columns, data: userData.length ? userData : [] });
+
+    //Hanldes User Record Delete Action
     const handleDeleteClick = (user: User) => {
         setSelectedUser(user);
         setIsConfirmationOpen(true);
@@ -157,12 +151,13 @@ function Users() {
         setSelectedUser(null);
     };
 
+    //Calls Fetch Function on Comp Mount, Sets User Data Locally to Response of Fetch Function 
     useEffect(() => {
         fetchUserData('GET', undefined);
     }, []);
 
     useEffect(() => {
-        localStorage.setItem('userData', encryptData(userData))
+        localStorage.setItem('userData', encryptData(userData) || '')
     }, [userData]);
 
 
@@ -220,7 +215,7 @@ function Users() {
                 open={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 user={selectedUser}
-                onSubmit={handleEditSubmit}
+                onSubmit={() => setIsModalOpen(false)}
             />
             <AddNewUserModal
                 open={isAddUserModalOpen}

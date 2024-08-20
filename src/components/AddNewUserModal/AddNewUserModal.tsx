@@ -24,6 +24,7 @@ const modalStyle = {
 };
 
 const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
+    //AddNewUserModal Comp Control Variables
     const dispatch = useDispatch();
     const { control, handleSubmit } = useForm<User>({
         defaultValues: {
@@ -41,7 +42,6 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
     });
 
     const onSubmit = (data: User) => {
-        console.log('New User Data:', data);
         dispatch(addUser(data));
         onClose();
     };

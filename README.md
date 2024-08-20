@@ -1,4 +1,4 @@
-# React + TypeScript + Vite
+# This repository holds the codebase for FineOne-Task which essentially is a CRUD Project with User Auth
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

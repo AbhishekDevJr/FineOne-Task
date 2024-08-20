@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { decryptData, encryptData } from '../../helpers/encryptData';
@@ -25,14 +25,13 @@ const Register: React.FC = () => {
 
     const onSubmit = (data: User) => {
         const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
-        console.log('Register Data------->', data, registeredUsers);
 
         if (Array.isArray(registeredUsers)) {
             const updatedRegisteredUsers = [...registeredUsers, data];
-            localStorage.setItem('registeredUsers', encryptData(updatedRegisteredUsers));
+            localStorage.setItem('registeredUsers', encryptData(updatedRegisteredUsers) || '');
         }
         else {
-            localStorage.setItem('registeredUsers', encryptData([data]));
+            localStorage.setItem('registeredUsers', encryptData([data]) || '');
         }
         navigate('/signin');
     };
@@ -43,46 +42,64 @@ const Register: React.FC = () => {
                 Register
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Controller
-                    name="firstName"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="First Name" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="lastName"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Last Name" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="age"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Age" type="number" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="phone"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="company"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Company" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="role"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Role" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="password"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Password" type="password" fullWidth margin="normal" />}
-                />
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="firstName"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="First Name" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="lastName"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Last Name" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="age"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Age" type="number" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="phone"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="company"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Company" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="role"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Role" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="password"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Password" type="password" fullWidth margin="normal" />}
+                        />
+                    </Grid>
+                </Grid>
                 <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                     Register
                 </Button>
