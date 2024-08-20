@@ -19,11 +19,25 @@ const modalStyle = {
     transform: 'translate(-50%, -50%)',
     width: 600,
     bgcolor: 'background.paper',
-    // border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     maxHeight: '80vh',
     overflowY: 'auto',
+};
+
+const fieldStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: '8px',
+    marginBottom: '16px',
+};
+
+const fullWidthStyle = {
+    width: '100%',
+};
+
+const halfWidthStyle = {
+    width: '48%',
 };
 
 const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) => {
@@ -62,63 +76,72 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
             aria-describedby="modal-description"
         >
             <Box sx={modalStyle}>
-                <Typography id="edit-modal-title" variant="h6" component="h2">
+                <Typography id="edit-modal-title" variant="h6" component="h2" gutterBottom>
                     Edit User
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Controller
-                        name="firstName"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="First Name" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="lastName"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Last Name" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="age"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Age" type="number" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="phone"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="ip"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="IP Address" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="macAddress"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="MAC Address" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="company"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Company" fullWidth margin="normal" />}
-                    />
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="firstName"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="First Name" sx={halfWidthStyle} />}
+                        />
+                        <Controller
+                            name="lastName"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Last Name" sx={halfWidthStyle} />}
+                        />
+                    </Box>
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="age"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Age" type="number" sx={halfWidthStyle} />}
+                        />
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Email" type="email" sx={halfWidthStyle} />}
+                        />
+                    </Box>
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="phone"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Phone" sx={halfWidthStyle} />}
+                        />
+                        <Controller
+                            name="ip"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="IP Address" sx={halfWidthStyle} />}
+                        />
+                    </Box>
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="macAddress"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="MAC Address" sx={halfWidthStyle} />}
+                        />
+                        <Controller
+                            name="company"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Company" sx={halfWidthStyle} />}
+                        />
+                    </Box>
                     <Controller
                         name="role"
                         control={control}
-                        render={({ field }) => <TextField {...field} label="Role" fullWidth margin="normal" />}
+                        render={({ field }) => <TextField {...field} label="Role" sx={fullWidthStyle} />}
                     />
-                    <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
-                        Save
-                    </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+                        <Button type="submit" variant="contained" color="primary">
+                            Save
+                        </Button>
+                    </Box>
                 </form>
             </Box>
         </Modal>
     );
 }
-
 
 export default UserEditModal;

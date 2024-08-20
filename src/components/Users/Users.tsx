@@ -9,6 +9,7 @@ import UserEditModal from '../UserEditModal/UserEditModal';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
 import { decryptData, encryptData } from '../../helpers/encryptData';
+import './users.scss';
 
 //User Object Structure Interface
 export interface User {
@@ -163,12 +164,12 @@ function Users() {
 
     return (
         <>
-            <div style={{ marginRight: '15px', marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ marginRight: '15px', marginBottom: '15px', marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
                 <Button variant="contained" color="primary" onClick={() => setIsAddUserModalOpen(true)}>
                     Add New User
                 </Button>
             </div>
-            <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', }}>
+            <table className="react-table" {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Helvetica, sans-serif' }}>
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
