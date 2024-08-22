@@ -1,6 +1,6 @@
 jobs:
-  simple_deployment_pipeline:
-    runs-on: ubuntu-20.04
+    simple_deployment_pipeline:
+      runs-on: ubuntu-20.04
       steps:
         - name: Set up Node.js
           uses: actions/setup-node@v3
