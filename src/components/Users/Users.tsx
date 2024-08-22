@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { API_HEADERS, USER_DATA_URL } from '../../constants/apiEndpoints';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, setUserData } from '../../features/userDataSlice';
@@ -108,7 +108,7 @@ function Users() {
     );
 
     //Fetches User Data from Dummy Json & Sets them as User Data in Global Store
-    const fetchUserData = async (apiMethod: string, reqBody: unknown) => {
+    const fetchUserData = useCallback(async (apiMethod: string, reqBody: unknown) => {
         const userData = await fetch(USER_DATA_URL, {
             method: apiMethod,
             body: reqBody ? JSON.stringify(reqBody) : undefined,
@@ -122,7 +122,7 @@ function Users() {
         else {
             //Handle Error Here
         }
-    }
+    }, []);
 
     //Gets Table Props by Passing Columns & User Data used to Render Table
     const {
@@ -155,7 +155,7 @@ function Users() {
     //Calls Fetch Function on Comp Mount, Sets User Data Locally to Response of Fetch Function 
     useEffect(() => {
         fetchUserData('GET', undefined);
-    }, []);
+    }, [fetchUserData]);
 
     useEffect(() => {
         localStorage.setItem('userData', encryptData(userData) || '')

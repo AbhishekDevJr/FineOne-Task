@@ -41,6 +41,13 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
         },
     });
 
+    const fieldStyle = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '8px',
+        marginBottom: '16px',
+    };
+
     const onSubmit = (data: User) => {
         dispatch(addUser(data));
         onClose();
@@ -58,54 +65,68 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
                     Add New User
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Controller
-                        name="firstName"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="First Name" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="lastName"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Last Name" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="age"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Age" type="number" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="phone"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="ip"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="IP Address" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="macAddress"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="MAC Address" fullWidth margin="normal" />}
-                    />
-                    <Controller
-                        name="company"
-                        control={control}
-                        render={({ field }) => <TextField {...field} label="Company" fullWidth margin="normal" />}
-                    />
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="firstName"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="First Name" fullWidth margin="normal" />}
+                        />
+                        <Controller
+                            name="lastName"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Last Name" fullWidth margin="normal" />}
+                        />
+                    </Box>
+
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="age"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Age" type="number" fullWidth margin="normal" />}
+                        />
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" />}
+                        />
+                    </Box>
+
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="phone"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
+                        />
+                        <Controller
+                            name="ip"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="IP Address" fullWidth margin="normal" />}
+                        />
+                    </Box>
+
+                    <Box sx={fieldStyle}>
+                        <Controller
+                            name="macAddress"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="MAC Address" fullWidth margin="normal" />}
+                        />
+                        <Controller
+                            name="company"
+                            control={control}
+                            render={({ field }) => <TextField {...field} label="Company" fullWidth margin="normal" />}
+                        />
+                    </Box>
                     <Controller
                         name="role"
                         control={control}
                         render={({ field }) => <TextField {...field} label="Role" fullWidth margin="normal" />}
                     />
-                    <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
-                        Save
-                    </Button>
+
+                    <Box sx={fieldStyle}>
+                        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
+                            Save
+                        </Button>
+                    </Box>
                 </form>
             </Box>
         </Modal>

@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
 import { decryptData, encryptData } from '../../helpers/encryptData';
 
 interface User {
