@@ -1,0 +1,18 @@
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+      steps:
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '20'
+  
+        - name: Install dependencies
+          run: yarn
+  
+        - name: Check style
+          run: yarn run eslint
+  
+        - name: Initialize Build
+          run: yarn run build
+  
