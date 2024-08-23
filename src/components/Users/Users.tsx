@@ -30,7 +30,7 @@ export interface User {
 
 function Users() {
     //Users Comp Control Variables
-    const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
+    const registeredUsers = decryptData(localStorage.getItem('registeredUsers')) as User[] | null;
     const dispatch = useDispatch();
     const userData = useSelector((state: RootState) => state.userData.userData);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);

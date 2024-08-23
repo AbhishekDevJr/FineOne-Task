@@ -11,11 +11,17 @@ export const encryptData = (data: unknown | undefined) => {
 };
 
 //Decrypts Passed Data CryptoJS Encryption
-export const decryptData = (encryptedData: unknown) => {
-    if (encryptedData && encryptedData !== '') {
+export const decryptData = (encryptedData: unknown): unknown | undefined => {
+    if (typeof encryptedData === 'string' && encryptedData !== '') {
         const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
         const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
-        const decryptedArray = JSON.parse(decryptedString);
-        return decryptedArray;
+        try {
+            const decryptedArray = JSON.parse(decryptedString);
+            return decryptedArray;
+        } catch (error) {
+            console.error('Failed to parse decrypted data', error);
+            return undefined;
+        }
     }
+    return undefined;
 };

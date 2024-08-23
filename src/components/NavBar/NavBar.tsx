@@ -25,7 +25,7 @@ const NavBar = () => {
 
     //Sets Login Token State to Locally Stored Login Token on Component Mount
     useEffect(() => {
-        setLoginToken(decryptData(localStorage.getItem('loginToken')));
+        setLoginToken(decryptData(localStorage.getItem('loginToken')) as string | undefined);
     }, []);
 
     const open = Boolean(anchorEl);

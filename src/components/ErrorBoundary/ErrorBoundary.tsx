@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 
-class ErrorBoundary extends React.Component {
+interface ErrorBoundaryProps {
+    children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+    hasError: boolean;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
     state = { hasError: false };
 
     //Lifecycle Method that runs whenever an Error occurs down it's component tree.
