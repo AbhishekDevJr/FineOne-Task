@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, setUserData } from '../../features/userDataSlice';
 import { useTable, Column, CellProps } from 'react-table';
 import { RootState } from '../../store/store';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import UserEditModal from '../UserEditModal/UserEditModal';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
 import { decryptData, encryptData } from '../../helpers/encryptData';
 import './users.scss';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 //User Object Structure Interface
 export interface User {
@@ -37,6 +38,8 @@ function Users() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
     const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [initialLimit, setInitialLimit] = useState(30);
 
     //Defines Columns for Table
     const columns: Column<User>[] = useMemo(
@@ -108,21 +111,28 @@ function Users() {
     );
 
     //Fetches User Data from Dummy Json & Sets them as User Data in Global Store
-    const fetchUserData = useCallback(async (apiMethod: string, reqBody: unknown) => {
-        const userData = await fetch(USER_DATA_URL, {
-            method: apiMethod,
-            body: reqBody ? JSON.stringify(reqBody) : undefined,
+    const fetchUserData = async () => {
+        const userData = await fetch(`https://dummyjson.com/users?limit=${initialLimit}&select=id,firstName,lastName,age,email,phone,birthData,ip,macAddress,company,role,password`, {
+            method: 'GET',
+            body: undefined,
             headers: API_HEADERS,
         });
 
         if (userData?.ok && userData?.status === 200) {
             const finalUserData = await userData.json();
             dispatch(setUserData(finalUserData.users.concat(registeredUsers?.map((item: User, index: number) => { return { ...item, id: finalUserData.users.length + (index + 1) } }))));
+
+            if (finalUserData.users.length >= finalUserData.total) {
+                setHasMore(false);
+            }
+            else {
+                setInitialLimit((prevState) => (prevState + 20));
+            }
         }
         else {
             //Handle Error Here
         }
-    }, []);
+    }
 
     //Gets Table Props by Passing Columns & User Data used to Render Table
     const {
@@ -154,8 +164,8 @@ function Users() {
 
     //Calls Fetch Function on Comp Mount, Sets User Data Locally to Response of Fetch Function 
     useEffect(() => {
-        fetchUserData('GET', undefined);
-    }, [fetchUserData]);
+        fetchUserData();
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('userData', encryptData(userData) || '')
@@ -169,41 +179,65 @@ function Users() {
                     Add New User
                 </Button>
             </div>
-            <table className="react-table" {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Helvetica, sans-serif' }}>
-                <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-                            {headerGroup.headers.map(column => (
-                                <th
-                                    {...column.getHeaderProps()}
-                                    style={{ borderBottom: '1px solid #ddd', padding: '10px', textAlign: 'left' }}
-                                    key={column.id}
-                                >
-                                    {column.render('Header')}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()} key={row.id}>
-                                {row.cells.map(cell => (
-                                    <td
-                                        {...cell.getCellProps()}
-                                        style={{ padding: '10px', borderBottom: '1px solid #ddd' }}
-                                        key={cell.column.id}
+            <InfiniteScroll
+                dataLength={userData.length}
+                next={fetchUserData}
+                hasMore={hasMore}
+                loader={
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+                        <div style={{
+                            border: '4px solid rgba(0, 0, 0, 0.1)',
+                            borderTop: '4px solid #3498db',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            animation: 'spin 1s linear infinite'
+                        }} />
+                    </div>
+                }
+                endMessage={
+                    <Typography id="edit-modal-title" variant="h6" component="h2" gutterBottom style={{ textAlign: 'center' }}>
+                        ~No More Data Available~
+                    </Typography>
+                }
+            >
+                <table className="react-table" {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Helvetica, sans-serif' }}>
+                    <thead>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                                {headerGroup.headers.map(column => (
+                                    <th
+                                        {...column.getHeaderProps()}
+                                        style={{ borderBottom: '1px solid #ddd', padding: '10px', textAlign: 'left' }}
+                                        key={column.id}
                                     >
-                                        {cell.render('Cell')}
-                                    </td>
+                                        {column.render('Header')}
+                                    </th>
                                 ))}
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()} key={row.id}>
+                                    {row.cells.map(cell => (
+                                        <td
+                                            {...cell.getCellProps()}
+                                            style={{ padding: '10px', borderBottom: '1px solid #ddd' }}
+                                            key={cell.column.id}
+                                        >
+                                            {cell.render('Cell')}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </InfiniteScroll>
+
             {selectedUser && (
                 <ConfirmationModal
                     open={isConfirmationOpen}
