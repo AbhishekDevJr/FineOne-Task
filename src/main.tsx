@@ -7,11 +7,11 @@ import { store } from './store/store.ts'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  // <StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <ErrorBoundary>
         <App />
       </ErrorBoundary>
     </Provider>
-  // </StrictMode>,
+  </StrictMode>,
 )

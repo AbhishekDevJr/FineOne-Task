@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { API_HEADERS, USER_DATA_URL } from '../../constants/apiEndpoints';
+import { useEffect, useMemo, useState } from 'react';
+import { API_HEADERS } from '../../constants/apiEndpoints';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, setUserData } from '../../features/userDataSlice';
 import { useTable, Column, CellProps } from 'react-table';
