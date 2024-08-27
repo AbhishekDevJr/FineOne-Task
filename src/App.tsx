@@ -5,7 +5,7 @@ import Register from './components/Register/Register';
 import Signin from './components/Signin/SignIn';
 import Home from './components/Home/Home';
 import ProtectedRoute from './components/ProtectedRoutes/ProtectedRoute';
-import Cities from './Cities/Cities';
+import Cities from './components/Cities/Cities';
 
 function App() {
   return (

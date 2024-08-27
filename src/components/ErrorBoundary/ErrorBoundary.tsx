@@ -41,6 +41,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                     <Typography variant="subtitle1" gutterBottom>
                         Abhishek has been notified and he will be working on a fix.
                     </Typography>
+                    <Typography variant="caption" gutterBottom>
+                        (Throwing Mock Error to Test Error Boundary.)
+                    </Typography>
                     <Box sx={{ marginTop: '20px' }}>
                         <Button
                             variant="contained"
