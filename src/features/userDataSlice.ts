@@ -9,6 +9,7 @@ const initialState: UserDataState = {
     userData: [],
 };
 
+//Feature Slice that manages User CRUD Reducer Logic
 const userDataSlice = createSlice({
     name: 'userData',
     initialState,

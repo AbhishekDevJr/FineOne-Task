@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Box, Button, TextField, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { User } from '../Users/Users';
@@ -59,6 +59,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
         },
     });
 
+    //Handles User Edit Submission
     const onSubmit = (data: User) => {
         dispatch(updateUser(data));
         toast.success(`User Details Updated Successfully.`, {
@@ -79,7 +80,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({ open, onClose, user }) =>
         onClose();
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (user) {
             Object.keys(user).forEach(key => setValue(key as keyof User, user[key]));
         }

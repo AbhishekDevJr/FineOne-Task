@@ -11,9 +11,7 @@ const Home: React.FC = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            // minHeight="100vh"
             textAlign="center"
-            // bgcolor="#f5f5f5"
             p={3}
         >
             <Typography variant="h3" gutterBottom>

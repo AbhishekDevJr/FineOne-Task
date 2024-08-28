@@ -8,6 +8,7 @@ const initialState: AuthState = {
     loginToken: undefined,
 };
 
+//Auth Feature Slice that manages User Authentication
 const authSlice = createSlice({
     name: 'auth',
     initialState,

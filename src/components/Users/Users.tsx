@@ -132,7 +132,16 @@ function Users() {
             }
         }
         else {
-            //Handle Error Here
+            toast.error(`Something went wrong while Fetching data from DummyJson API.`, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     }
 
@@ -145,12 +154,13 @@ function Users() {
         prepareRow,
     } = useTable({ columns, data: userData.length ? userData : [] });
 
-    //Hanldes User Record Delete Action
+    //Handles User Record Delete Action
     const handleDeleteClick = (user: User) => {
         setSelectedUser(user);
         setIsConfirmationOpen(true);
     };
 
+    //Handles User Record Delete Confirmation
     const handleConfirmDelete = () => {
         if (selectedUser) {
             dispatch(deleteUser(selectedUser.id));
@@ -179,6 +189,7 @@ function Users() {
         fetchUserData();
     }, []);
 
+    //Sets User Data Locally whenever UserData is Updated
     useEffect(() => {
         localStorage.setItem('userData', encryptData(userData) || '')
     }, [userData]);

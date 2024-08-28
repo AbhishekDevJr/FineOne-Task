@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 
+//This component is used to throw mock error to test ErrorBoundary
 function Cities() {
     useEffect(() => {
         throw new Error('Error Boundary Test.');

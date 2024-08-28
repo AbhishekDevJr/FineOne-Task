@@ -21,9 +21,11 @@ interface User {
 }
 
 const Register: React.FC = () => {
+    //React Hook Form Variables
     const { control, handleSubmit, formState: { errors } } = useForm<User>();
     const navigate = useNavigate();
 
+    //Handles User Register Form Submission
     const onSubmit = (data: User) => {
         const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
 

@@ -50,6 +50,7 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
         marginBottom: '16px',
     };
 
+    //Handles Add New User Form Submission
     const onSubmit = (data: User) => {
         dispatch(addUser(data));
         toast.success(`New User Added Successfully.`, {
