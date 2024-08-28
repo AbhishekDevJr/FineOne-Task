@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const isAuthenticated = decryptData(localStorage.getItem('loginToken'));
-    return isAuthenticated === 'chintapakdumdum' ? children : <Navigate to="/" />;
+    return isAuthenticated === import.meta.env.VITE_APP_CLIENT_SECRET_KEY ? children : <Navigate to="/" />;
 };
 
 export default ProtectedRoute;

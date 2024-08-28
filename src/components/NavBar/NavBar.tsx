@@ -40,7 +40,7 @@ const NavBar = () => {
                 <Button color="inherit" component={Link} to="/users">User Data</Button>
                 <Button color="inherit" component={Link} to="/cities">City Data</Button>
                 <Button color="inherit" component={Link} to="/countries">Country Data</Button>
-                {loginToken || loginTokenTemp === 'chintapakdumdum' ?
+                {loginToken || loginTokenTemp === import.meta.env.VITE_APP_CLIENT_SECRET_KEY ?
                     <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)} color="inherit">
                         <Avatar alt="Profile Picture">U</Avatar>
                     </IconButton>

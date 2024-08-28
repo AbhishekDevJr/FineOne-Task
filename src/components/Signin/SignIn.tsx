@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { decryptData, encryptData } from '../../helpers/encryptData';
 import { useDispatch } from 'react-redux';
 import { setLoginToken } from '../../features/authSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface SignInForm {
     email: string;
@@ -13,7 +15,7 @@ interface SignInForm {
 
 const Signin: React.FC = () => {
     //SignIn Comp Control Variables
-    const { control, handleSubmit } = useForm<SignInForm>();
+    const { control, handleSubmit, formState: { errors } } = useForm<SignInForm>();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [registeredUserState, setRegisteredUserState] = useState(decryptData(localStorage.getItem('registeredUsers')));
@@ -23,16 +25,44 @@ const Signin: React.FC = () => {
         //Checks SignIN Credentials with Locally Stores Registered User
         if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.email === data.email)) {
             if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.password === data.password)) {
-                localStorage.setItem('loginToken', encryptData('chintapakdumdum') || '');
-                dispatch(setLoginToken(encryptData('chintapakdumdum')));
-                navigate('/users');
+                localStorage.setItem('loginToken', encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY) || '');
+                dispatch(setLoginToken(encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY)));
+                toast.success(`User Successfully Authenticated.`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+                setTimeout(() => navigate('/users'), 2000);
             }
             else {
-                alert('Wrong Password!');
+                toast.error(`Incorrect Password.`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             }
         }
         else {
-            alert('Wrong Username!');
+            toast.error(`User Not Found.`, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
     };
 
@@ -42,32 +72,76 @@ const Signin: React.FC = () => {
     }, []);
 
     return (
-        <Box sx={{ width: 400, margin: 'auto', mt: 5 }}>
-            <Typography variant="h4" gutterBottom>
-                Sign In
-            </Typography>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" />}
-                />
-                <Controller
-                    name="password"
-                    control={control}
-                    render={({ field }) => <TextField {...field} label="Password" type="password" fullWidth margin="normal" />}
-                />
-                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+        <>
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme="dark"
+            />
+            <Box sx={{ width: 400, margin: 'auto', mt: 5 }}>
+                <Typography variant="h4" gutterBottom>
                     Sign In
-                </Button>
-            </form>
-            <Typography variant="body2" align="left" sx={{ mt: 2 }}>
-                Don't have an account?
-                <Button variant="text" color="primary" onClick={() => navigate('/register')} sx={{ textTransform: 'none' }}>
-                    Register Here.
-                </Button>
-            </Typography>
-        </Box>
+                </Typography>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Controller
+                        name="email"
+                        control={control}
+                        rules={{
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                                message: "Enter a valid email"
+                            }
+                        }}
+                        render={({ field }) =>
+                            <TextField
+                                {...field}
+                                label="Email"
+                                type="email"
+                                fullWidth
+                                margin="normal"
+                                error={!!errors.email}
+                                helperText={errors.email ? errors.email.message : ""}
+                            />}
+                    />
+                    <Controller
+                        name="password"
+                        control={control}
+                        rules={{
+                            required: "Password is required",
+                            pattern: {
+                                value: /^[ A-Za-z0-9_@./#&+-]*$/,
+                                message: "Password contains invalid characters"
+                            }
+                        }}
+                        render={({ field }) =>
+                            <TextField {...field}
+                                label="Password"
+                                type="password"
+                                fullWidth
+                                margin="normal"
+                                error={!!errors.password}
+                                helperText={errors.password ? errors.password.message : ""}
+                            />}
+                    />
+                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                        Sign In
+                    </Button>
+                </form>
+                <Typography variant="body2" align="left" sx={{ mt: 2 }}>
+                    Don't have an account?
+                    <Button variant="text" color="primary" onClick={() => navigate('/register')} sx={{ textTransform: 'none' }}>
+                        Register Here.
+                    </Button>
+                </Typography>
+            </Box>
+        </>
     );
 };
 

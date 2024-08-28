@@ -11,6 +11,8 @@ import AddNewUserModal from '../AddNewUserModal/AddNewUserModal';
 import { decryptData, encryptData } from '../../helpers/encryptData';
 import './users.scss';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 //User Object Structure Interface
 export interface User {
@@ -152,6 +154,16 @@ function Users() {
     const handleConfirmDelete = () => {
         if (selectedUser) {
             dispatch(deleteUser(selectedUser.id));
+            toast.success(`User Deleted Successfully.`, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
         setIsConfirmationOpen(false);
         setSelectedUser(null);
@@ -174,6 +186,17 @@ function Users() {
 
     return (
         <>
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme="dark"
+            />
             <div style={{ marginRight: '15px', marginBottom: '15px', marginTop: '15px', display: 'flex', justifyContent: 'flex-end' }}>
                 <Button variant="contained" color="primary" onClick={() => setIsAddUserModalOpen(true)}>
                     Add New User
