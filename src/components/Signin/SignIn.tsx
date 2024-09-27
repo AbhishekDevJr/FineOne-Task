@@ -20,39 +20,20 @@ const Signin: React.FC = () => {
     const dispatch = useDispatch();
     const [registeredUserState, setRegisteredUserState] = useState(decryptData(localStorage.getItem('registeredUsers')));
 
-    //Form Submission Handler
-    const onSubmit = (data: SignInForm) => {
-        //Checks SignIN Credentials with Locally Stores Registered User
-        if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.email === data.email)) {
-            if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.password === data.password)) {
-                localStorage.setItem('loginToken', encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY) || '');
-                dispatch(setLoginToken(encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY)));
-                toast.success(`User Successfully Authenticated.`, {
-                    position: "top-center",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                });
-                setTimeout(() => navigate('/users'), 2000);
-            }
-            else {
-                toast.error(`Incorrect Password.`, {
-                    position: "top-center",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                });
-            }
+    const userAuthApi = async (reqBody) => {
+        try {
+            const userAuthData = await fetch(`${import.meta.env.VITE_APP_BACK_END_URL}/user/login/`, {
+                method: 'POST',
+                body: JSON.stringify(reqBody),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }
+            });
+            const userAuthDataJson = await userAuthData.json()
+            console.log('Login Res---------------->', userAuthDataJson);
         }
-        else {
+        catch (e) {
+            console.log('User Auth Error--------------->', e)
             toast.error(`User Not Found.`, {
                 position: "top-center",
                 autoClose: 3000,
@@ -64,6 +45,56 @@ const Signin: React.FC = () => {
                 theme: "dark",
             });
         }
+    }
+
+    //Form Submission Handler
+    const onSubmit = (data: SignInForm) => {
+        //Checks SignIN Credentials with Locally Stored Registered User
+        userAuthApi({
+            username: data?.email,
+            password: data?.password
+        })
+        // if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.email === data.email)) {
+        //     if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.password === data.password)) {
+        //         localStorage.setItem('loginToken', encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY) || '');
+        //         dispatch(setLoginToken(encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY)));
+        //         toast.success(`User Successfully Authenticated.`, {
+        //             position: "top-center",
+        //             autoClose: 3000,
+        //             hideProgressBar: true,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "dark",
+        //         });
+        //         setTimeout(() => navigate('/users'), 2000);
+        //     }
+        //     else {
+        //         toast.error(`Incorrect Password.`, {
+        //             position: "top-center",
+        //             autoClose: 3000,
+        //             hideProgressBar: true,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "dark",
+        //         });
+        //     }
+        // }
+        // else {
+        //     toast.error(`User Not Found.`, {
+        //         position: "top-center",
+        //         autoClose: 3000,
+        //         hideProgressBar: true,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: "dark",
+        //     });
+        // }
     };
 
     //Sets State to Registered Users Stored in LocalStorage

@@ -25,29 +25,72 @@ const Register: React.FC = () => {
     const { control, handleSubmit, formState: { errors } } = useForm<User>();
     const navigate = useNavigate();
 
+    const userRegistrationApi = async (reqBody) => {
+        try {
+            const registeredUser = await fetch(`${import.meta.env.VITE_APP_BACK_END_URL}/user/register/`, {
+                method: 'POST',
+                body: JSON.stringify(reqBody),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }
+            });
+            const registeredUserJson = await registeredUser.json();
+            if (registeredUserJson?.title === 'User Created') {
+                toast.success(`${registeredUserJson?.message}`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            }
+            else {
+                toast.error(`${registeredUserJson?.errors?.username?.join(' ')}`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            }
+        }
+        catch (e) {
+            console.log('User Register Error------------------>', e)
+            toast.error(`Something went wrong, Our Devs are working on it.`, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+        }
+    }
+
     //Handles User Register Form Submission
     const onSubmit = (data: User) => {
-        const registeredUsers = decryptData(localStorage.getItem('registeredUsers'));
-
-        if (Array.isArray(registeredUsers)) {
-            const updatedRegisteredUsers = [...registeredUsers, data];
-            localStorage.setItem('registeredUsers', encryptData(updatedRegisteredUsers) || '');
+        const reqBody = {
+            first_name: data?.firstName,
+            last_name: data?.lastName,
+            email: data?.email,
+            username: data?.email,
+            password: data?.password,
+            profile: {
+                age: data?.age,
+                phone_number: data?.phone,
+                company: data?.company,
+                role: data?.role
+            }
         }
-        else {
-            localStorage.setItem('registeredUsers', encryptData([data]) || '');
-        }
-
-        toast.success(`User Registered Successfully.`, {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
-        setTimeout(() => navigate('/signin'), 2000);
+        userRegistrationApi(reqBody);
     };
 
     return (
