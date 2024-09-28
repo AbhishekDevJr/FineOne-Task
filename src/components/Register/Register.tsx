@@ -46,6 +46,7 @@ const Register: React.FC = () => {
                     progress: undefined,
                     theme: "dark",
                 });
+                setTimeout(() => navigate('/signin'), 2000);
             }
             else {
                 toast.error(`${registeredUserJson?.errors?.username?.join(' ')}`, {

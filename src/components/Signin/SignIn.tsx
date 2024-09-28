@@ -27,10 +27,36 @@ const Signin: React.FC = () => {
                 body: JSON.stringify(reqBody),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
-                }
+                },
+                credentials: 'include',
             });
             const userAuthDataJson = await userAuthData.json()
             console.log('Login Res---------------->', userAuthDataJson);
+            if (userAuthDataJson?.title === 'User Authenticated') {
+                toast.success(`${userAuthDataJson?.message}`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+                setTimeout(() => navigate('/users'), 2000);
+            }
+            else {
+                toast.error(`${userAuthDataJson?.message}`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            }
         }
         catch (e) {
             console.log('User Auth Error--------------->', e)
@@ -54,47 +80,6 @@ const Signin: React.FC = () => {
             username: data?.email,
             password: data?.password
         })
-        // if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.email === data.email)) {
-        //     if (Array.isArray(registeredUserState) && registeredUserState.some((item) => item.password === data.password)) {
-        //         localStorage.setItem('loginToken', encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY) || '');
-        //         dispatch(setLoginToken(encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY)));
-        //         toast.success(`User Successfully Authenticated.`, {
-        //             position: "top-center",
-        //             autoClose: 3000,
-        //             hideProgressBar: true,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: "dark",
-        //         });
-        //         setTimeout(() => navigate('/users'), 2000);
-        //     }
-        //     else {
-        //         toast.error(`Incorrect Password.`, {
-        //             position: "top-center",
-        //             autoClose: 3000,
-        //             hideProgressBar: true,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: "dark",
-        //         });
-        //     }
-        // }
-        // else {
-        //     toast.error(`User Not Found.`, {
-        //         position: "top-center",
-        //         autoClose: 3000,
-        //         hideProgressBar: true,
-        //         closeOnClick: true,
-        //         pauseOnHover: true,
-        //         draggable: true,
-        //         progress: undefined,
-        //         theme: "dark",
-        //     });
-        // }
     };
 
     //Sets State to Registered Users Stored in LocalStorage
