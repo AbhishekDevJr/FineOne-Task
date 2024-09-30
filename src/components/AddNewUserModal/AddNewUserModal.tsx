@@ -1,15 +1,30 @@
 import React from 'react';
 import { Modal, Box, Button, TextField, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
-import { User } from '../Users/Users';
-import { useDispatch } from 'react-redux';
-import { addUser } from '../../features/userDataSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    age: number;
+    email: string;
+    phone: string;
+    ip: string;
+    macAddress: string;
+    company: {
+        item: string,
+        name: string
+    };
+    role: string;
+    password: string;
+}
 interface AddNewUserModalProps {
     open: boolean;
     onClose: () => void;
+    setIsUserAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const modalStyle = {
@@ -25,9 +40,8 @@ const modalStyle = {
     overflowY: 'auto',
 };
 
-const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
+const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose, setIsUserAdded }) => {
     //AddNewUserModal Comp Control Variables
-    const dispatch = useDispatch();
     const { control, handleSubmit, formState: { errors }, reset } = useForm<User>({
         defaultValues: {
             id: 0,
@@ -38,8 +52,12 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
             phone: '',
             ip: '',
             macAddress: '',
-            company: { items: {} },
-            role: ''
+            company: {
+                item: '',
+                name: ''
+            },
+            role: '',
+            password: ''
         },
     });
 
@@ -50,18 +68,71 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
         marginBottom: '16px',
     };
 
+    const userRegistrationApi = async (reqBody) => {
+        try {
+            const registeredUser = await fetch(`${import.meta.env.VITE_APP_BACK_END_URL}/user/register/`, {
+                method: 'POST',
+                body: JSON.stringify(reqBody),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }
+            });
+            const registeredUserJson = await registeredUser.json();
+            if (registeredUserJson?.title === 'User Created') {
+                toast.success(`${registeredUserJson?.message}`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+                setIsUserAdded((prevState) => !prevState);
+            }
+            else {
+                toast.error(`${registeredUserJson?.errors?.username?.join(' ')}`, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            }
+        }
+        catch (e) {
+            console.log('User Register Error------------------>', e);
+            toast.error(`Something went wrong, Our Devs are working on it.`, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+        }
+    }
+
     //Handles Add New User Form Submission
     const onSubmit = (data: User) => {
-        dispatch(addUser(data));
-        toast.success(`New User Added Successfully.`, {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
+        userRegistrationApi({
+            first_name: data?.firstName,
+            last_name: data?.lastName,
+            username: data?.email,
+            email: data?.email,
+            password: data?.password,
+            profile: {
+                age: data?.age,
+                company: data?.company,
+                phone_number: data?.phone,
+                role: data?.role
+            }
         });
         handleClose();
     };
@@ -278,6 +349,28 @@ const AddNewUserModal: React.FC<AddNewUserModalProps> = ({ open, onClose }) => {
                                     margin="normal"
                                     error={!!errors.role}
                                     helperText={errors.role ? errors.role.message : ""}
+                                />}
+                        />
+
+                        <Controller
+                            name="password"
+                            control={control}
+                            rules={{
+                                required: "Password is required",
+                                pattern: {
+                                    value: /^[ A-Za-z0-9_@./#&+-]*$/,
+                                    message: "Password contains invalid characters"
+                                }
+                            }}
+                            render={({ field }) =>
+                                <TextField
+                                    {...field}
+                                    label="Password"
+                                    type="password"
+                                    fullWidth
+                                    margin="normal"
+                                    error={!!errors.password}
+                                    helperText={errors.password ? errors.password.message : ""}
                                 />}
                         />
 

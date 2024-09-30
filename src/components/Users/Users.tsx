@@ -42,6 +42,7 @@ function Users() {
     const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [initialLimit, setInitialLimit] = useState(30);
+    const [isUserAdded, setIsUserAdded] = useState<boolean>(false);
 
     //Defines Columns for Table
     const columns: Column<User>[] = useMemo(
@@ -212,7 +213,7 @@ function Users() {
     //Calls Fetch Function on Comp Mount, Sets User Data Locally to Response of Fetch Function 
     useEffect(() => {
         fetchUserData();
-    }, []);
+    }, [isUserAdded]);
 
     //Sets User Data Locally whenever UserData is Updated
     useEffect(() => {
@@ -314,6 +315,7 @@ function Users() {
             <AddNewUserModal
                 open={isAddUserModalOpen}
                 onClose={() => setIsAddUserModalOpen(false)}
+                setIsUserAdded={setIsUserAdded}
             />
         </>
     )
