@@ -120,9 +120,34 @@ function Users() {
             headers: API_HEADERS,
         });
 
-        if (userData?.ok && userData?.status === 200) {
+        const storedUserData = await fetch(`${import.meta.env.VITE_APP_BACK_END_URL}/user/get-user-data/`, {
+            method: 'GET',
+            // body: JSON.stringify(reqBody),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            credentials: 'include',
+        });
+
+        const storedUserDataJson = await storedUserData.json();
+
+        if (userData?.ok && userData?.status === 200 && storedUserDataJson?.title === 'User Data') {
             const finalUserData = await userData.json();
-            dispatch(setUserData(finalUserData.users.concat(registeredUsers?.map((item: User, index: number) => { return { ...item, id: finalUserData.users.length + (index + 1) } }))));
+
+            const finalStoredUserData = storedUserDataJson?.data?.map((item, index) => ({
+                ...item,
+                id: index + 1,
+                firstName: item?.first_name,
+                lastName: item?.last_name,
+                age: Number(item?.profile?.age),
+                phone: String(item?.profile?.phone_number),
+                role: item?.profile?.role,
+                company: { name: item?.profile?.company }
+            }));
+
+            finalUserData.users = finalUserData?.users?.map((item, index) => ({ ...item, id: finalStoredUserData?.length + index + 1 }))
+
+            dispatch(setUserData(finalStoredUserData?.concat(finalUserData.users)));
 
             if (finalUserData.users.length >= finalUserData.total) {
                 setHasMore(false);

@@ -31,7 +31,6 @@ const Signin: React.FC = () => {
                 credentials: 'include',
             });
             const userAuthDataJson = await userAuthData.json()
-            console.log('Login Res---------------->', userAuthDataJson);
             if (userAuthDataJson?.title === 'User Authenticated') {
                 toast.success(`${userAuthDataJson?.message}`, {
                     position: "top-center",
@@ -43,6 +42,7 @@ const Signin: React.FC = () => {
                     progress: undefined,
                     theme: "dark",
                 });
+                localStorage.setItem('userAuthKey', encryptData(import.meta.env.VITE_APP_CLIENT_SECRET_KEY));
                 setTimeout(() => navigate('/users'), 2000);
             }
             else {

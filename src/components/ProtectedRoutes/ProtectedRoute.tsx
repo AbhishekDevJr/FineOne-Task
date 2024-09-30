@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 //Protects Routes based on Auth Token
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const verifyUserApi = async () => {
         try {
@@ -22,7 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
             });
             const userAuthVerifyJson = await userAuthVerify.json()
 
-            if (userAuthVerifyJson?.title === 'User Authenticated' && userAuthVerifyJson?.authenticated) {
+            if (userAuthVerifyJson?.title === 'User Authenticated') {
                 setIsAuthenticated(true);
             }
             else {
